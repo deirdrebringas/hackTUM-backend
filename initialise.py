@@ -6,7 +6,7 @@ def main():
     COLLECTION_NAME = "lyrics_collection"
     client = MongoClient()
     collection = client.get_database(DB_NAME).get_collection(COLLECTION_NAME)
-    rhymer = Rhymer(collection)
-    rhymer.create_markov()
+    r = Rhymer(collection)
+    r.create_markov()
 
 main()

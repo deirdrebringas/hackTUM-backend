@@ -7,7 +7,6 @@ class Rhymer():
     def __init__(self, collection):
         self.collection = collection
         self.markov = ""
-        self.rap_lines = []
 
     def reverse_sentence(self, str):
         return " ".join(str.split()[::-1])
@@ -25,17 +24,21 @@ class Rhymer():
     def create_markov(self):
         self.markov = markovify.NewlineText(self.create_backwards_corpus())
 
-    def choose_random_indices(self, line_length, num_lines):
-        return random.sample(list(range(0,line_length)), num_lines)
+    def choose_random_indices(self, all_lines_len, num_ind_wanted):
+        return random.sample(list(range(0,all_lines_len)), num_ind_wanted)
 
     def generate_lines(self, num_lines, baseWord):
         all_lines = []
+        rap_lines = []
         rhymes = pronouncing.rhymes(baseWord)
         for rhyme in rhymes:
-            _line = self.markov.make_sentence_with_start(rhyme, strict=False, tries=20)
+            _line = self.markov.make_sentence_with_start(rhyme, strict=False, tries=10)
             if _line is not None:
                 all_lines.append(_line)
-        random_indices = self.choose_random_indices(len(all_lines), num_lines)
+        if len(all_lines) < num_lines:
+            random_indices = self.choose_random_indices(len(all_lines), len(all_lines))
+        else: 
+            random_indices = self.choose_random_indices(len(all_lines), num_lines)
         for ind in random_indices:
-            self.rap_lines.append(all_lines[ind])
-        return self.reverse_lines(self.rap_lines).split("\n")
+            rap_lines.append(all_lines[ind])
+        return self.reverse_lines(rap_lines).split("\n")
